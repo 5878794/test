@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <!--<script src="xface.js"></script>-->
+</head>
+<style>
+    *{margin: 0; padding: 0; -webkit-transform-origin:center center;}
+    body,html{ width: 100%; height: 100%; }
+    body{
+        display: -webkit-box;
+        -webkit-box-align:center;
+        -webkit-box-pack:center;
+        width: 100%;
+        height: 100%;
+        background: #ccc;
+    }
+    .main{
+        -webkit-perspective: 800px;
+        width: 200px; height: 200px;
+
+
+        /*-webkit-transform-origin: center center;*/
+        /*-webkit-transform:rotateZ(10deg);*/
+    }
+    .ddd{
+        position: relative;
+        width: 100%; height: 100%; -webkit-transform: rotateX(0deg) rotateY(0deg);
+        -webkit-transform-style: preserve-3d;
+
+    }
+    .a1{
+        position: absolute;
+        left: 0;
+        top:0;
+        width: 100%;
+        height: 100%;
+        background: #f00;
+        -webkit-transform: translate3d(0,0,100px);
+        z-index: 100;
+    }
+    .a2{
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        -webkit-transform: translate3d(100px,0,0) rotateY(90deg);
+        z-index: 1;
+    }
+    .a3{
+        position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+        background: greenyellow;
+        -webkit-transform: translate3d(-100px,0,0) rotateY(-90deg);
+        z-index:2;
+    }
+    .a4{
+        position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+        background:royalblue;
+        -webkit-transform: translate3d(0,0,-100px) rotateY(180deg);
+        z-index:3;
+    }
+    .a5{
+        position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+        background: rosybrown;
+        -webkit-transform: translate3d(0,-100px,0) rotateX(90deg);
+        z-index:4;
+    }
+    .a6{
+        position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+        background: teal;
+        -webkit-transform: translate3d(0,100px,0) rotateX(-90deg);
+        z-index:5;
+    }
+
+    #main div{
+        display: -webkit-box;
+        -webkit-box-align:center;
+        -webkit-box-pack:center;
+    }
+
+</style>
+
+
+
+<body>
+    <!--<div class="body">-->
+        <div class="main" >
+            <div class="ddd" id="main">
+                <div class="a1">1</div>
+                <div class="a2">2</div>
+                <div class="a3">3</div>
+                <div class="a4">4</div>
+                <div class="a5">5</div>
+                <div class="a6">6</div>
+            </div>
+        </div>
+    <!--</div>-->
+
+</body>
+</html>
+<script>
+    var state = false,start_x,start_y;
+    var main = document.getElementById("main");
+
+//    setTimeout(function(){
+//        var xx = Math.random()*360;
+//        var yy = Math.random()*360;
+//        main.style.webkitTransform = "rotateX("+ -yy+"deg) rotateY("+xx+"deg)";
+//    },100);
+
+
+    document.addEventListener("mousedown",function(e){
+
+        state = true;
+        start_x = e.pageX;
+        start_y = e.pageY;
+    },false);
+    document.addEventListener("mouseup",function(){
+        state = false;
+    },false);
+    document.addEventListener("mousemove",function(e){
+        if(!state){return}
+        var x = e.pageX,y = e.pageY;
+
+        var xx = x-start_x;
+        var yy = y-start_y;
+
+
+        main.style.webkitTransform = "rotateX("+ -yy+"deg) rotateY("+xx+"deg)";
+
+
+    },false);
+
+
+
+
+
+
+
+</script>

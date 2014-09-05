@@ -1,0 +1,145 @@
+<!--自动生成列表   demo  test     2014-8-15 -->
+
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        var data = [];
+        for(var i= 0,l=10;i<l;i++){
+            data.push({
+                id:i,
+                name:"name"+i,
+                phone:"phone"+i,
+                address:"address"+i,
+                age:"age"+i,
+                sex:"sex"+i
+            })
+        }
+
+
+        var TABLE = function(){
+            this.body = document.body;
+            this.title = ["a","b","c","d","e","f","g"];
+            this.size = ["100","100","200","100","100","100","200"];
+            this.key = ["id","name","phone","address","age","sex"];
+            this.type = ["text","text","text","text","text","text","del"];
+            this.clickFn = ["","","","","","",function(id){console.log(id)}];
+
+            this.width = 0;
+
+
+            this.init();
+        };
+
+        TABLE.prototype = {
+            init:function(){
+                this.getTableWidth();
+                this.createTitle();
+
+            },
+            getTableWidth:function(){
+                var width = 0;
+                for(var i= 0,l=this.size.length;i<l;i++){
+                    width += parseInt(this.size[i]);
+                }
+                this.width = width;
+            },
+            createTitle:function(){
+                var obj = document.createElement("div");
+                obj.style.cssText = "width:"+this.width+"px; height:30px; line-height:30px; background:#eee; text-align:center; border-top:1px solid #ccc; border-bottom:1px solid #ccc";
+                for(var i= 0,l=this.title.length;i<l;i++){
+                    var _title = document.createElement("div"),
+                        width = this.size[i];
+
+                    _title.style.cssText = "height:30px; float:left; border-left:1px solid #ccc;";
+                    if(i == this.title.length - 1){
+                        width -= 2;
+                        _title.style.cssText += "width:"+width+"px; border-right:1px solid #ccc;";
+                    }else{
+                        width -= 1;
+                        _title.style.cssText += "width:"+width+"px; ";
+                    }
+
+                    _title.innerText = this.title[i];
+                    obj.appendChild(_title);
+
+                }
+
+
+
+
+                this.body.appendChild(obj);
+            },
+            createTr:function(data){
+
+                for(var i= 0,l=data.length;i<l;i++){
+                    var obj = document.createElement("div");
+                    obj.style.cssText = "width:"+this.width+"px; height:30px; line-height:30px; background:#fff; text-align:center; border-bottom:1px solid #ccc";
+
+                    for(var j= 0,jl=this.title.length;j<jl;j++){
+                        var type = this.type[j],
+                            fn_name = "get_"+type+"_div";
+
+                        if(this[fn_name]){
+                            var _td = this[fn_name](j,this.title.length-1,data[i]);
+                            obj.appendChild(_td);
+                        }
+
+
+
+
+
+                    }
+                    this.body.appendChild(obj);
+                }
+
+
+
+
+            },
+            get_text_div:function(i,l,data){
+                var _title = document.createElement("div"),
+                    width = parseInt(this.size[i])-1;
+                _title.style.cssText = "width:"+width+"px; float:left;";
+                _title.innerText = data[this.key[i]];
+
+                return _title;
+            },
+            get_del_div:function(i,l,data){
+                var obj = document.createElement("div"),
+                        width = parseInt(this.size[i])-1;
+                obj.style.cssText = "width:"+width+"px; float:left;";
+                obj.innerText = "删除";
+
+                var _this = this;
+                obj.onclick = function(){
+                    _this.clickFn[i](data);
+                };
+                return obj;
+            }
+        };
+
+
+        window.onload = function(){
+            bbb = new TABLE();
+        }
+
+
+    </script>
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

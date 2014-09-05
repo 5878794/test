@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <script>
+        //注意第一层数据改为了数组
+        var data = [{
+            "id":"0",
+            "fid":"-1",
+            "title":"学校",
+            "img_top":"http://www.5djianli.com/uploads/allimg/110102/1_110102143106_1.jpg",
+            "child":
+                    [
+                        {
+                            "id":"11",
+                            "fid":"0",
+                            "title":"校长室",
+                            "child":
+                                    [
+                                        {
+                                            "id":"111",
+                                            "fid":"11",
+                                            "title":"徐炳华",
+                                            "img_top":"http://www.jxau.edu.cn/picture/article/1/df/34/d67d380a44ec8107ca9783163183/550378b1-aec6-4845-ae84-5651e6b7596e.jpg",
+                                            "text1":"职务：校长",
+                                            "text2":"XXXXXXX"
+                                        },
+                                        {
+                                            "id":"112",
+                                            "fid":"11",
+                                            "title":"曹鹤翔",
+                                            "img_top":"http://edu.longhoo.net/attachement/jpg/site2/20130502/6c626dda406312ec7b2414.jpg",
+                                            "text1":"职务：副校长",
+                                            "text2":"XXXXXXX"
+                                        },
+                                        {
+                                            "id":"113",
+                                            "fid":"11",
+                                            "title":"毛宗敏",
+                                            "img_top":"http://www.jxsdfz.com/images/mzz.jpg",
+                                            "text1":"职务：副校长"
+                                        }
+                                    ]
+                        },
+                        {
+                            "id":"12",
+                            "fid":"0",
+                            "title":"德育处",
+                            "img_back":"http://sc.websbook.com/sc/upimg/allimg/090302/057_1600_websbook_com.jpg",
+                            "child":
+                                    [
+                                        {
+                                            "id":"122",
+                                            "fid":"12",
+                                            "title":"底气",
+                                            "text1":"职务：德育处xxx"
+                                        }
+                                    ]
+                        },
+                        {
+                            "id":"13",
+                            "fid":"0",
+                            "title":"教研处",
+                            "child":
+                                    [
+                                        {
+                                            "id":"131",
+                                            "fid":"13",
+                                            "title":"欧文",
+                                            "text1":"职务：教研主任"
+                                        }
+                                    ]
+                        },
+                        {
+                            "id":"14",
+                            "fid":"0",
+                            "title":"教科室"
+                        }
+                    ]
+        }];
+
+
+        var YJL = {
+            body:null,
+            data:null,
+            clickFn:null,
+
+            div:null,
+            div_width:100,
+            div_height:50,
+            init:function(datas){
+                this.body = $("#"+datas.body_id);
+                this.data = datas.data;
+                this.body.css({position:"relative"});
+                this.createObj();
+                this.create();
+                this.eventBind();
+                this.showList(datas.showList);
+                this.clickFn = datas.clickFn;
+            },
+            createObj:function(){
+                var div = $("<div></div>");
+                div.css({
+                    width:this.div_width -1 +"px",
+                    height:this.div_height-1 +"px",
+//                    "border-left":"2px solid #000",
+                    "border-bottom":"1px solid #000",
+                    position:"relative",
+                    "margin-bottom":"20px"
+                }).attr({
+                    state:"hide"
+                });
+
+
+                var span = $("<span></span>");
+                span.css({
+                    display:"block",
+                    width:this.div_width - 2 + "px",
+                    height:this.div_height - 2 + "px",
+                    border:"1px solid #000",
+                    background:"#ccc",
+                    position:"absolute",
+                    left:this.div_width + "px",
+                    top: this.div_height/2 + "px",
+                    "line-height":this.div_height + "px",
+                    "text-align":"center",
+                    cursor:"pointer"
+                });
+                div.append(span);
+
+                var a = $("<a>-</a>");
+                a.css({
+                    display:"block",
+                    width:"40px",
+                    height:this.div_height + "px",
+                    "line-height":this.div_height + "px",
+                    "text-align":"center",
+                    "font-size":"40px",
+                    position:"absolute",
+                    left:this.div_width*2 + "px",
+                    top: this.div_height/2 + "px",
+                    cursor:"pointer"
+                });
+                div.append(a);
+
+                this.div = div;
+            },
+            create:function(data,obj,n){
+                var left = (data)? this.div_width*1.5+"px" : 0;
+                data = data || this.data;
+                obj = obj || this.body;
+                n = n || 1;
+
+
+                var body = $("<div class='__tree_body__' my_lv='"+n+"'></div>");
+                    body.css({
+                        left:(left)? left : -this.div_width + "px",
+                        position:"relative",
+                        "border-left":(left)? "1px solid #000" : "none",
+                        top:(left)? this.div_height/2 + "px" : 0,
+                        "margin-bottom":this.div_height+"px",
+                        "margin-top":"-20px",
+                        display:"none"
+                    });
+
+                obj.append(body);
+
+                for(var i= 0,l=data.length;i<l;i++){
+                    var this_data = data[i],
+                        fid = this_data.fid,
+                        id = this_data.id,
+                        img = this_data.img_top,
+                        title = this_data.title,
+                        child = this_data.child,
+                        div = this.div.clone();
+
+                    div.find("span").text(title).attr({
+                        my_id:id,
+                        my_fid:fid,
+                        my_img:img
+                    });
+                    if(!left){
+                        div.css({border:"none"});
+                    }
+                    body.append(div);
+
+                    if($.isArray(child) && child.length !=0){
+                        this.create(child,body,n+1);
+                    }else{
+                        div.find("a").css({display:"none"});
+                    }
+                }
+
+            },
+            eventBind:function(){
+                var _this = this;
+                this.body.find("a").click(function(){
+                    _this.showHideTree(this);
+                });
+                this.body.find("span").click(function(){
+                    _this.openUrl(this);
+                });
+            },
+            showHideTree:function(obj){
+                var symbol = $(obj),
+                    this_obj = symbol.parent(),
+                    next = this_obj.next(),
+                    state = this_obj.attr("state");
+
+                if(state == "show"){
+                    symbol.text("+");
+                    this_obj.attr({state:"hide"});
+                    next.css({display:"none"});
+                }else{
+                    symbol.text("-");
+                    this_obj.attr({state:"show"});
+                    next.css({display:"block"});
+                }
+
+
+            },
+            openUrl:function(obj){
+                obj = $(obj);
+                var id = obj.attr("my_id"),
+                    fid = obj.attr("my_fid"),
+                    img = obj.attr("my_img");
+
+                this.clickFn(id,fid,img);
+
+            },
+            showList:function(n){
+                n = n || 1;
+                var objs = this.body.find(".__tree_body__");
+
+                objs.each(function(){
+                    var this_n = $(this).attr("my_lv");
+                    if(this_n<=n){
+                        $(this).css({display:"block"});
+                        if(this_n == n){
+                            $(this).children().each(function(){
+                                if(!$(this).hasClass("__tree_body__")){
+                                    $(this).attr({state:"hide"})
+                                    $(this).find("a").text("+")
+                                }
+                            })
+                        }else{
+                            $(this).children().each(function(){
+                                if(!$(this).hasClass("__tree_body__")){
+                                    $(this).attr({state:"show"})
+                                    $(this).find("a").text("-")
+                                }
+                            })
+                        }
+                    }else{
+                        $(this).css({display:"none"});
+                    }
+                })
+
+
+
+            }
+        };
+
+
+        $(document).ready(function(){
+            YJL.init({
+                body_id:"tree",
+                data:data,
+                showList:2,
+                clickFn:function(id,fid,img){
+                    alert("id:"+id+" \n  fid:"+fid+" \n  img:"+img);
+                }
+            });
+        });
+
+
+    </script>
+</head>
+<body id="tree">
+
+
+
+
+</body>
+</html>

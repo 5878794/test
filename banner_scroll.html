@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <style>
+        *{
+            padding:0; margin: 0;
+        }
+        #banner{
+            width:100%; height: 200px; overflow: hidden;
+        }
+        #banner_main{
+            width:100%; height: 100%;
+        }
+        #banner img{
+
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            new scrollBanner({
+                win:$("#banner"),
+                body:$("#banner_main"),
+                direction:"x"
+            })
+
+        });
+
+        var scrollBanner = function(data){
+            this.win = data.win;
+            this.body = data.body;
+            this.imgLength = this.body.find("a").length;
+            this.direction = data.direction || "x";
+            this.time = data.time || 5000;
+            this.animateTime = data.animateTime || 1000;
+            this.pointBg = "#ccc";
+            this.pointSelectBg = "#f00";
+
+            this.winWidth = null;
+            this.winHeight = null;
+
+            this.bodyWidth = null;
+            this.bodyHeight = null;
+
+            this.page = 0;
+            this.maxPage = this.imgLength -1;
+
+            this.intervalFn = null;
+            this.points = [];
+
+            this.init();
+        };
+        scrollBanner.prototype = {
+            init:function(){
+                this.styleSet();
+                this.addPoint();
+                this.setDiv();
+                this.addEvent();
+
+
+            },
+            //设置样式
+            styleSet:function(){
+                this.win.css({
+                    position:"relative",
+                    overflow:"hidden"
+                });
+
+                this.body.css({
+                    position:"absolute",
+                    left:0,
+                    top:0
+                });
+
+                this.body.find("a").css({
+                    display:"block",
+                    width:this.winWidth+"px",
+                    height:this.winHeight+"px",
+                    border:"none",
+                    overflow:"hidden",
+                    "position":"relative"
+                });
+
+                if(this.direction == "x"){
+                    this.body.find("a").css({
+                        float:"left"
+                    })
+                }
+
+                this.body.find("a").each(function(){
+                    var img = $(this).find("img"),
+                        img_src = img.attr("src"),
+                        color = $(this).attr("color") || "transparent";
+
+                    img.remove();
+                    $(this).css({
+                        "background-image":"url('"+img_src+"')",
+                        "background-repeat":"no-repeat",
+                        "background-position":"center center",
+                        "background-color":color
+                    });
+
+                });
+
+
+            },
+            //添加指示的点点
+            addPoint:function(){
+                var _this = this;
+
+                var div = $("<div></div>"),
+                    width = _this.imgLength * 20;
+                div.css({
+                    width:width + "px",
+                    height:"10px",
+                    position:"absolute",
+                    bottom:"10px",
+                    left:"50%",
+                    "margin-left": - width/2 + "px"
+                });
+
+
+                var span = $("<div></div>");
+                span.css({
+                    width:"10px",
+                    height:"10px",
+                    margin:"0 5px",
+                    background:this.pointBg,
+                    "border-radius":"5px",
+                    float:"left"
+                });
+
+                for(var i= 0,l=this.imgLength;i<l;i++){
+                    var this_item = span.clone().attr({n:i});
+                    if(i==0){
+                        this_item.css({background:this.pointSelectBg})
+                    }
+                    div.append(this_item);
+                }
+                this.points = div.find("div");
+
+
+                this.win.append(div)
+            },
+            //设置窗口参数等
+            setDiv:function(){
+                this.body.stop(true,true);
+
+                this.winWidth = parseInt(this.win.width());
+                this.winHeight = parseInt(this.win.height());
+
+                var width = (this.direction == "x")? this.winWidth*this.imgLength : this.winWidth,
+                    height = (this.direction == "x")? this.winHeight : this.winHeight*this.imgLength;
+
+                this.bodyWidth = width;
+                this.bodyHeight = height;
+
+                this.body.css({
+                    width:width+"px",
+                    height:height+"px"
+                });
+                this.body.find("a").css({
+                    width:this.winWidth+"px",
+                    height:this.winHeight+"px"
+                })
+
+
+
+            },
+            //添加事件
+            addEvent:function(){
+                var _this = this;
+                $(window).resize(function(){
+                    _this.setDiv();
+                });
+
+
+                this.win.hover(function(){
+                    _this.body.stop(true,true);
+                    clearInterval(_this.intervalFn);
+                    _this.intervalFn = null;
+                },function(){
+                    if(!_this.intervalFn){
+                        temp_fn();
+                    }
+                });
+
+
+                this.points.mouseover(function(){
+                    _this.page = $(this).attr("n");
+                    _this.animate();
+                });
+
+
+                var temp_fn = function(){
+                    if(_this.imgLength <= 1){
+                        return;
+                    }
+                    _this.intervalFn = setInterval(function(){
+                        _this.page ++;
+                        _this.animate();
+                    },_this.time)
+                };
+                temp_fn();
+            },
+            //动画
+            animate:function(){
+
+                this.page = (this.page > this.maxPage)? 0 : this.page;
+
+                this.points.css({background:this.pointBg});
+                this.points.eq(this.page).css({background:this.pointSelectBg});
+
+                this.body.stop(true,true);
+                if(this.direction == "x"){
+                    this.body.animate({
+                        left: - this.page * this.winWidth + "px"
+                    },this.animateTime)
+                }else{
+                    this.body.animate({
+                        top: - this.page * this.winHeight + "px"
+                    },this.animateTime/2)
+                }
+            }
+        }
+
+
+
+
+
+
+    </script>
+</head>
+<body>
+
+    <div id="banner">
+        <div id="banner_main">
+            <a color="red" href="http://www.t-go.biz/proactivity/activity_5_25"><img src="http://tgoimg.t-go.biz/carousels/20140526/c3a44133e921458985a7dcfe8245e7e8.jpg" /></a>
+            <a color="#ccc" href="/"><img src="http://tgoimg.t-go.biz/carousels/20140524/b8f9fd91b995417b8a2ebc0cecf31316.jpg" /></a>
+            <a color="#eee" href="http://www.t-go.biz/activity/activity_5_27"><img src="http://tgoimg.t-go.biz/carousels/20140523/0ebb96c319cf4f2ead1945de698a237f.jpg" /></a>
+            <a color="#000" href="/"><img src="http://tgoimg.t-go.biz/carousels/20140527/c1e02f04690b4a348fe6d0154724bc09.jpg" /></a>
+        </div>
+    </div>
+
+</body>
+</html>

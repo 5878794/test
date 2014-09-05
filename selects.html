@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script>
+        var data = [
+            {"Activitys": [
+                {"ActivityName": "t111", "ActivityUrl": "http://www.baidu.com"},
+                {"ActivityName": "t112", "ActivityUrl": "sss"}
+            ], "AreaName": "宁夏回族自治区", "AreaValue": "3055", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t121", "ActivityUrl": "http://www.baidu.com"},
+                    {"ActivityName": "t122", "ActivityUrl": "sss"}
+                ], "AreaName": "哈哈", "AreaValue": "3068", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t131", "ActivityUrl": "http://www.baidu.com"},
+                        {"ActivityName": "t132", "ActivityUrl": "sss"}
+                    ], "AreaName": "大厦的", "AreaValue": "3069"}
+                ]}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t211", "ActivityUrl": ""}
+            ], "AreaName": "广西壮族自治区", "AreaValue": "2111", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t221", "ActivityUrl": ""}
+                ], "AreaName": "南宁市", "AreaValue": "2112", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t231", "ActivityUrl": ""}
+                    ], "AreaName": "兴宁区", "AreaValue": "2113"}
+                ]}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t311", "ActivityUrl": "http://ActivityThree"}
+            ], "AreaName": "湖北省", "AreaValue": "1529", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t321", "ActivityUrl": "http://ActivityThree"}
+                ], "AreaName": "武汉市", "AreaValue": "1530", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t331", "ActivityUrl": "http://ActivityThree"}
+                    ], "AreaName": "江岸区", "AreaValue": "1531"}
+                ]}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t411", "ActivityUrl": "aa"},
+                {"ActivityName": "t412", "ActivityUrl": "tiangou"}
+            ], "AreaName": "江苏省", "AreaValue": "236", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t421", "ActivityUrl": "aa"},
+                    {"ActivityName": "t422", "ActivityUrl": "tiangou"}
+                ], "AreaName": "苏州市", "AreaValue": "285", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t431", "ActivityUrl": "aa"}
+                    ], "AreaName": "吴中区", "AreaValue": "290"}
+                ]}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t511", "ActivityUrl": "hh"}
+            ], "AreaName": "内蒙古自治区", "AreaValue": "1026", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t521", "ActivityUrl": "hh"}
+                ], "AreaName": "呼和浩特市", "AreaValue": "1027", "Childrens": []}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t611", "ActivityUrl": ""}
+            ], "AreaName": "浙江省", "AreaValue": "100", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t621", "ActivityUrl": ""}
+                ], "AreaName": "杭州市", "AreaValue": "101", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t631", "ActivityUrl": ""}
+                    ], "AreaName": "上城区", "AreaValue": "102"}
+                ]}
+            ]},
+            {"Activitys": [
+                {"ActivityName": "t711", "ActivityUrl": "www.baidu.com"}
+            ], "AreaName": " ", "AreaValue": "0", "Childrens": [
+                {"Activitys": [
+                    {"ActivityName": "t721", "ActivityUrl": "www.baidu.com"}
+                ], "AreaName": " ", "AreaValue": "0", "Childrens": [
+                    {"Activitys": [
+                        {"ActivityName": "t731", "ActivityUrl": "www.baidu.com"}
+                    ], "AreaName": "", "AreaValue": "0"}
+                ]}
+            ]}
+        ];
+
+
+
+
+        $(document).ready(function(){
+            cascadeSelect.init({
+                data:data,
+                id:"area",
+                selectId:[3055,3068,3069],
+                activeSelectId:"sss"
+            });
+
+        });
+
+        var cascadeSelect = {
+            data:null,
+            body:null,
+            selectId:null,
+            activeSelectId:null,
+            createIds:[],
+            allName:["省","市","县"],
+            activeSelect:null,
+            init:function(data){
+                this.data = data.data;
+                this.body = $("#"+data.id);
+                this.selectId = data.selectId;
+                this.activeSelectId = data.activeSelectId;
+
+                this.createActiveSelect();
+                this.createSelect(0);
+                this.intervalSelect();
+                this.getActiveData();
+                this.selectChooseId("temp_active_select_obj",this.activeSelectId);
+            },
+            //创建活动的select
+            createActiveSelect:function(){
+                var select = $("<select></select>");
+                select.attr({id:"temp_active_select_obj"});
+                this.activeSelect = select;
+                this.body.append(select);
+            },
+            //动态创建省市区的select
+            createSelect:function(id){
+                var data = this.getMyData(id);
+                if(data.length == 0){return;}
+                var all_name = "全部"+this.allName[this.createIds.length];
+
+                var select = $("<select></select>"),
+                    no = (id)? id : 0,
+                    t_id = "add_select_"+no;
+
+                this.createIds.push(t_id);
+                select.attr({id:t_id});
+                select.append("<option value=''>"+all_name+"</option>");
+                for(var i= 0,l=data.length;i<l;i++){
+                    var this_o = $("<option value='"+data[i].AreaValue+"'>"+data[i].AreaName+"</option>");
+                    select.append(this_o);
+                }
+                select.insertBefore(this.activeSelect);
+                this.addChangeEvent(select);
+
+            },
+            //自动删除select
+            autoRemove:function(id){
+                if(!id){return;}
+                var temp = [],
+                    data = this.createIds,
+                    is_find = false;
+
+                for(var i= 0,l=data.length;i<l;i++){
+                    var this_id = data[i];
+                    if(!is_find){
+                        temp.push(this_id);
+                    }else{
+                        $("#"+this_id).unbind("change").remove();
+                    }
+
+                    if(this_id == id){
+                        is_find = true;
+                    }
+                }
+                this.createIds = temp;
+
+            },
+            //获取数据
+            getMyData:function(id,state){
+                if(id === undefined){
+                    return [];
+                }
+
+                //取第一层数据
+                if(id == 0){
+                    return this.data;
+                }
+
+                var data = this.data,
+                    get_data = null;
+
+                var getData = function(data){
+                    for(var i= 0,l=data.length;i<l;i++){
+                        if(get_data){
+                            break;
+                        }
+                        var this_id = data[i].AreaValue,
+                            this_child = data[i].Childrens;
+                        if(this_id == id){
+                            if(state){
+                                get_data = data[i];
+                            }else{
+                                get_data = this_child;
+                            }
+                        }else{
+                            if(this_child && this_child.length !=0){
+                                getData(this_child);
+                            }
+                        }
+                    }
+                };
+
+                getData(data);
+                if(state){
+                    get_data = (get_data)? get_data : {};
+                }else{
+                    get_data = (get_data)? get_data : [];
+                }
+
+                return get_data;
+
+
+            },
+            //获取活动的数据
+            getActiveData:function(){
+                var n = this.createIds.length - 1,
+                    last_select = $("#"+this.createIds[n]),
+                    data,
+                    id = last_select.val();
+
+                if(id == ""){
+                    if( n == 0){
+                        data =  {
+                            Activitys:[],
+                            Childrens:this.data
+                        };
+                    }else{
+                        var select_obj = $("#"+this.createIds[n-1]),
+                            this_id = select_obj.val();
+                        data = this.getMyData(this_id,true);
+                    }
+                }else{
+                    data = this.getMyData(id,true);
+                }
+
+                this.refreshActiveSelectData(data);
+
+
+            },
+            //事件绑定
+            addChangeEvent:function(obj){
+                var _this = this;
+                obj.change(function(){
+                    var id = $(this).val() || null,
+                        select_id = $(this).attr("id");
+                    _this.autoRemove(select_id);
+                    _this.createSelect(id);
+                    _this.getActiveData();
+                })
+            },
+            //更新active的select
+            refreshActiveSelectData:function(data){
+                var obj = this.activeSelect;
+                obj.find("option").remove();
+
+                obj.append("<option></option>");
+
+                var new_data = [];
+                for(var z= 0,zl=data.Activitys.length;z<zl;z++){
+                    new_data.push(data.Activitys[z]);
+                }
+
+                var get_data_function = function(this_data){
+                    this_data = this_data.Childrens;
+                    if(typeof(this_data) == "object" && this_data.length !=0){
+                        for(var i= 0,l=this_data.length;i<l;i++){
+                            var now_data = this_data[i],
+                                now_add_data = now_data.Activitys || [];
+                            for(var z= 0,zl=now_add_data.length;z<zl;z++){
+                                new_data.push(now_add_data[z]);
+                            }
+
+                            get_data_function(now_data);
+                        }
+                    }
+
+                };
+                get_data_function(data);
+
+
+                for(var i= 0,l=new_data.length;i<l;i++){
+                    var temp_data = new_data[i],
+                        temp_name = temp_data.ActivityName,
+                        temp_url = temp_data.ActivityUrl;
+
+                    obj.append("<option value='"+temp_url+"'>"+temp_name+"</option>");
+                }
+
+
+            },
+            //初始select赋值
+            intervalSelect:function(){
+                var data = this.selectId;
+
+                for(var i= 0,l=data.length;i<l;i++){
+                    var this_id = data[i],
+                        this_select_id = this.createIds[this.createIds.length-1];
+
+                    this.selectChooseId(this_select_id,this_id);
+                    this.autoRemove(this_select_id);
+                    this.createSelect(this_id);
+                }
+            },
+            //select选中id
+            selectChooseId:function(select_id,id){
+                var options = $("#"+select_id).find("option");
+                console.log(options.length)
+                for(var i= 0,l=options.length;i<l;i++){
+                    if(options.eq(i).val() == id){
+                        options.eq(i).get(0).selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+
+
+    <div id="area" style="width: 400px; height: 30px; line-height: 30px; text-align: right; background: #f00;">
+
+
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script>
+//        获取主div宽,高
+//        getMainDivSize({
+//            maxWidth:800,         //@param number 显示最大宽度
+//            maxHeight:600,        //@param number 显示最大高度
+//            minWidth:400,         //@param number 显示最小宽度
+//            minHeight:300,        //@param number 显示最小高度
+//            bodyWidth:700,        //@param number 浏览器宽度
+//            bodyHeight:400        //@param number 浏览器高度
+//        })
+//        返回{
+//          width:"",               //@param number
+//          height:""               //@param number
+//          }
+        var getMainDivSize = function (data) {
+            var maxWidth = data.maxWidth,
+                maxHeight = data.maxHeight,
+                minWidth = data.minWidth,
+                minHeight = data.minHeight,
+                bodyWidth = data.bodyWidth,
+                bodyHeight = data.bodyHeight,
+                newmaxWidth,
+                newmaxHeight;
+
+            if (maxWidth > 0 && maxHeight > 0) {
+                if (maxWidth / maxHeight >= bodyWidth / bodyHeight) {
+                    if (maxWidth > bodyWidth) {
+                        newmaxWidth = bodyWidth;
+                        newmaxHeight = maxHeight * bodyWidth / maxWidth;
+                    } else {
+                        newmaxWidth = maxWidth;
+                        newmaxHeight = maxHeight;
+                    }
+                } else {
+                    if (maxHeight > bodyHeight) {
+                        newmaxHeight = bodyHeight;
+                        newmaxWidth = maxWidth * bodyHeight / maxHeight;
+                    } else {
+                        newmaxWidth = maxWidth;
+                        newmaxHeight = maxHeight;
+                    }
+                }
+            }
+
+            if(newmaxWidth <= minWidth || newmaxHeight <= minHeight){
+                newmaxWidth = minWidth;
+                newmaxHeight = minHeight;
+            }
+
+            return {
+                width: newmaxWidth,
+                height: newmaxHeight
+            }
+        };
+
+
+
+
+//        图片加载
+//          loadImages({
+//              images:[
+//                  "http://f.hiphotos.baidu.com/image/pic/item/d52a2834349b033b9e3d47de17ce36d3d539bd79.jpg",
+//                  "http://c.hiphotos.baidu.com/image/pic/item/f11f3a292df5e0fe5bf868055e6034a85fdf72d6.jpg"
+//              ],
+//              callback:function(s){
+//                  alert(s)          //param:obj  {success:[],errors:[]}
+//              }
+//          })
+
+         var loadImages = function(data){
+            var images = data.images,
+                callback = data.callback,
+                temp = [],
+                errors = [],
+                success = [],
+                total = images.length,
+                n = 0,
+                ok = function(src){
+                    n++;
+                    if(n == total){
+                        alert("end")
+                        callback({
+                            errors:errors,
+                            success:success
+                        });
+                    }
+                };
+
+             if(images.length == 0){
+                 callback();
+                 return;
+             }
+
+             for(var i= 0,l=images.length;i<l;i++){
+                 temp[i] = new Image();
+                 var this_src = images[i];
+
+                 temp[i].onload = function () {
+                     success.push(this.src);
+                     ok(this.src);
+                 };
+                 temp[i].onerror = function () {
+                     errors.push(this.src);
+                     ok();
+                 };
+                 if(temp[i].complete){
+                     temp[i].complete = function () {
+                         success.push(this.src);
+                         ok(this.src);
+                     };
+                 }
+
+                 temp[i].src = this_src;
+             }
+         };
+
+
+    </script>
+</head>
+<body>
+
+
+</body>
+</html>

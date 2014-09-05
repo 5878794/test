@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript">
+
+        //Global variables
+        var picWidth = 200; // width of the canvas
+        var picHeight = 200; // height of the canvas
+        var picLength = picWidth * picHeight; // number of chunks
+        var myImage = new Image(); // Create a new blank image.
+        // Load the image and display it.
+        function displayImage() {
+
+            // Get the canvas element.
+            canvas = document.getElementById("myCanvas");
+
+            // Make sure you got it.
+            if (canvas.getContext) {
+
+                // Specify 2d canvas type.
+                ctx = canvas.getContext("2d");
+
+                // When the image is loaded, draw it.
+                myImage.onload = function() {
+                    // Load the image into the context.
+                    ctx.drawImage(myImage, 0, 0);
+
+                    // Get and modify the image data.
+//                    getColorData();
+
+                    // Put the modified image back on the canvas.
+//                    putColorData();
+                }
+
+                // Define the source of the image.
+                // This file must be on your machine in the same folder as this web page.
+                myImage.src = "oceans-clip.jpg";
+            }
+        }
+
+
+
+
+
+
+    </script>
+</head>
+
+<body onload="displayImage()">
+
+<canvas id="myCanvas" width="200" height="200"></canvas>
+
+</body>
+
+</html>
+<script>
+//    var canvasEffect = function(data){
+//        this.id = data.id;
+//        this.width = data.width;
+//        this.height = data.height;
+//
+//
+//        this.canvas = document.getElementById(id);
+//        this.ctx = null;
+//
+//        if(canvas.getContext){
+//            this.ctx = canvas.getContext("2d");
+//        }else{
+//            console.log("不支持canvas");
+//            return;
+//        }
+//
+//
+//    }
+
+
+
+
+
+
+    var canvasEffect = {
+        //变成黑白
+        greyscale:function(data){
+            var id = data.id,
+                    width = data.width,
+                    height = data.height,
+                    canvas = document.getElementById(id),
+                    ctx = null,
+                    point_number = width * height;
+
+            if(canvas.getContext){
+                ctx = canvas.getContext("2d");
+            }else{
+                console.log("不支持canvas");
+                return;
+            }
+
+            var old = ctx.getImageData(0,0,width,height);
+            var canvas_data = ctx.getImageData(0,0,width,height);
+
+            var tempCanvasData =  ctx.getImageData(0,0,width,height);
+
+
+            //浮雕效果
+            for ( var x = 1; x < tempCanvasData.width-1; x++)
+            {
+                for ( var y = 1; y < tempCanvasData.height-1; y++)
+                {
+
+                    // Index of the pixel in the array
+                    var idx = (x + y * tempCanvasData.width) * 4;
+                    var bidx = ((x-1) + y * tempCanvasData.width) * 4;
+                    var aidx = ((x+1) + y * tempCanvasData.width) * 4;
+
+                    // calculate new RGB value
+                    var nr = tempCanvasData.data[aidx + 0] - tempCanvasData.data[bidx + 0] + 128;
+                    var ng = tempCanvasData.data[aidx + 1] - tempCanvasData.data[bidx + 1] + 128;
+                    var nb = tempCanvasData.data[aidx + 2] - tempCanvasData.data[bidx + 2] + 128;
+                    nr = (nr < 0) ? 0 : ((nr >255) ? 255 : nr);
+                    ng = (ng < 0) ? 0 : ((ng >255) ? 255 : ng);
+                    nb = (nb < 0) ? 0 : ((nb >255) ? 255 : nb);
+
+                    // assign new pixel value
+                    canvas_data.data[idx + 0] = nr; // Red channel
+                    canvas_data.data[idx + 1] = ng; // Green channel
+                    canvas_data.data[idx + 2] = nb; // Blue channel
+                    canvas_data.data[idx + 3] = 255; // Alpha channel
+                }
+            }
+
+
+
+
+//            for (var i = 0; i < point_number * 4; i += 4) {
+//                // First bytes are red bytes.
+//                // Get red value.
+//                var myRed = canvas_data.data[i];
+//
+//                // Second bytes are green bytes.
+//                // Get green value.
+//                var myGreen = canvas_data.data[i + 1];
+//
+//                // Third bytes are blue bytes.
+//                // Get blue value.
+//                var myBlue = canvas_data.data[i + 2];
+//
+//                // Fourth bytes are alpha bytes
+//                // We don't care about alpha here.
+//                // Add the three values and divide by three.
+//                // Make it an integer.
+////-------------------------------------------------------------------------
+//                //去色
+//                var myGray = parseInt((myRed + myGreen + myBlue) / 3);
+//                // Assign average to red, green, and blue.
+//                canvas_data.data[i] = myGray;
+//                canvas_data.data[i + 1] = myGray;
+//                canvas_data.data[i + 2] = myGray;
+//
+//                //黑白
+////                var myGray = parseInt((myRed + myGreen + myBlue) / 3);
+////                myGray = (myGray>=100)? 255 : 0;
+//////                Assign average to red, green, and blue.
+////                canvas_data.data[i] = myGray;
+////                canvas_data.data[i + 1] = myGray;
+////                canvas_data.data[i + 2] = myGray;
+//
+//
+////                //底片效果
+////                myRed = 255 -myRed;
+////                myGreen = 255 -myGreen;
+////                myBlue = 255 -myBlue;
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+////----------------------------------------------------------------------
+////                //正片叠底
+////                myRed = parseInt(myRed*166/255);
+////                myGreen = parseInt(myGreen*162/255);
+////                myBlue = parseInt(myBlue*159/255);
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//
+//                //颜色加深
+//                //166 162 159
+//                //R=166-(255-232)*(255-166)/232=157
+////                myRed = 166-parseInt((255-myRed)*(255-166)/myRed);
+////                myGreen = 162-parseInt((255-myGreen)*(255-162)/myGreen);
+////                myBlue = 159-parseInt((255-myBlue)*(255-159)/myBlue);
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//                //线型加深
+////                myRed = myRed +166 -255;
+////                myGreen = myGreen + 162 -255;
+////                myBlue = myBlue + 159 -255;
+////                myRed = (myRed>0)? myRed : 0;
+////                myGreen = (myGreen>0)? myGreen : 0;
+////                myBlue = (myBlue>0)? myBlue : 0;
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//
+//                //深色  ？？？？？？？？  pass掉
+////                if(166+159+162 > myRed+myGreen+myBlue){
+////                    myRed = 166;
+////                    myGreen = 159;
+////                    myBlue = 162;
+////                }
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//
+//                //滤色
+////                myRed = 255-parseInt((255-myRed)*(255-166)/255);
+////                myGreen = 255-parseInt((255-myGreen)*(255-162)/255);
+////                myBlue = 255-parseInt((255-myBlue)*(255-159)/255);
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//                //颜色减淡
+////                myRed = 166+parseInt((166*myRed)/(255-myRed));
+////                myGreen = 162+parseInt((162*myGreen)*(255-myGreen));
+////                myBlue = 159+parseInt((159*myBlue)*(255-myBlue));
+////                myRed = (myRed>255)? 255 : myRed;
+////                myGreen = (myGreen>255)? 255 : myGreen;
+////                myBlue = (myBlue>255)? 255 : myBlue;
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//
+//                //柔光
+//                //当混合色R>128，结果R=基色R+(2*混合色R-255)*(sqrt(基色R/255)*255-基色R)/255。
+////                myRed = parseInt((2*myRed-255)*(Math.sqrt(166/255)*255-166)/255+166);
+////                myGreen = parseInt((2*myGreen-255)*(Math.sqrt(162/255)*255-162)/255+162);
+////                myBlue = parseInt((2*myBlue-255)*(Math.sqrt(159/255)*255-159)/255+159);
+////
+////
+////// Assign average to red, green, and blue.
+////                canvas_data.data[i] = myRed;
+////                canvas_data.data[i + 1] = myGreen;
+////                canvas_data.data[i + 2] = myBlue;
+//
+//
+//
+//            }
+
+            ctx.putImageData(canvas_data, 0, 0);
+
+        }
+    };
+
+
+</script>

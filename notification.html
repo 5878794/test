@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+<script>
+
+
+
+
+
+
+
+    var myNotification = {
+        is_support:window.Notification,
+        //初始化
+        initial:function(){
+            var _this = this,
+                clickfn = null;
+
+            window.addEventListener("click",clickfn = function(){
+                document.body.removeEventListener("click",clickfn,false);
+                if(Notification.permission != "granted"){
+                    _this.getPermission();
+                }
+            },false);
+        },
+        //获取权限
+        getPermission:function(){
+            if(this.is_support){
+                Notification.requestPermission();
+            }
+        },
+        //显示
+        show:function(msg,data,clickFn){
+            if(this.is_support && Notification.permission == "granted") {
+                var a = new Notification(msg,data);
+                a.onclick = clickFn;
+            }
+        }
+    };
+
+
+myNotification.initial();
+window.addEventListener("click",function(){
+    var img = "http://tgoimg.t-go.biz/Storage/master/product/thumbs310/310_26846d2a0167417f8a4f14b962adc533.jpg";
+
+    myNotification.show("aabb",{
+        icon:"oceans-clip.jpg",
+        body:"11111111"
+    },function(){
+        window.location.href = "http://www.baidu.com"
+    });
+},false);
+</script>
+
+
+
+
+点击
+
+</body>
+</html>

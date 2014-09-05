@@ -1,0 +1,484 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+*{
+    margin:0;
+    padding:0;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    -moz-user-select:none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none; position: absolute;
+    /*文字抗锯齿*/
+    /*-webkit-font-smoothing:antialiased;*/
+
+    /*文件间距*/
+    /*-webkit-margin-before: 1em;*/
+    /*-webkit-margin-after: 1em;*/
+    /*-webkit-margin-start: 0px;*/
+    /*-webkit-margin-end: 0px;*/
+    /*-webkit-padding-start: 40px;*/
+}
+
+/*3d视角*/
+/*-webkit-perspective: 800px;*/
+
+
+@-ms-viewport{
+    /*width:auto;*/
+    width:device-width;
+}
+
+
+
+.position{
+    position: relative; overflow: hidden;
+}
+
+
+
+
+input, textarea{
+    -webkit-user-select:auto;
+    /*windows phone 有问题*/
+    /*resize:none;*/
+    /*position: relative;*/
+    /*left:9999px;*/
+    /*-webkit-transform:translate(-9999px,0);*/
+    -ms-user-select:auto;
+    -moz-user-select:auto;
+    border: 1px solid #000;
+    /*box-shadow:inset 0 2px 4px rgba(0,0,0,.4);*/
+    /*-webkit-box-shadow:inset 0 2px 4px rgba(0,0,0,.4);*/
+    text-indent: 6pt;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing:border-box;
+    border-radius: 5px;
+    font-size: 16px;
+    padding-left: 30px;
+}
+
+
+input,button,select,textarea{
+    outline:none;
+}
+
+body{
+    font-family: "微软雅黑", Arial, "宋体";
+    font-size:12pt;
+    color:#000;
+    background: #fff;
+    /*-ms-touch-action: none;    *//*windowsphone屏蔽滚动*/
+}
+
+
+
+
+/*首字空格   11*2+1   */
+.space{
+    text-indent: 2em;
+}
+.input_space {
+    text-indent: 1em;
+}
+
+
+.page{
+    width:100%;
+    height:100%;
+}
+
+.backhidden{
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+}
+
+
+.diandian{
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+.breakall{
+    word-wrap:break-word;
+    word-break:break-all;
+}
+
+.notbreak{
+    white-space:nowrap;
+}
+
+
+.boxflex1{
+    box-flex:1;
+    -webkit-box-flex:1;
+    -ms-flex:1;
+    -moz-box-flex:1;
+}
+.boxflex2{
+    box-flex:2;
+    -webkit-box-flex:2;
+    -ms-flex:2;
+    -moz-box-flex:2;
+}
+
+
+
+
+
+.box_s{
+    display: box;
+    display:-ms-flexbox;
+    display:-webkit-box;
+    display: -moz-box;
+    width: 100%;
+    box-orient:vertical;
+    -webkit-box-orient:vertical;
+    -ms-flex-direction:column;
+    -moz-box-orient:vertical;
+}
+
+.box_h{
+    display: box;
+    display:-ms-flexbox;
+    display:-webkit-box;
+    display: -moz-box;
+    width:100%;
+    box-orient:horizontal;
+    -webkit-box-orient:horizontal;
+    -ms-flex-direction:row;
+    -moz-box-orient:horizontal;
+}
+
+.hidden{
+    display:none;
+}
+
+.center{
+    display: box;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display: -moz-box;
+    width: 100%;
+    box-align:center;
+    box-pack:center;
+    -webkit-box-align:center;
+    -webkit-box-pack:center;
+    -ms-flex-pack:center;
+    -ms-flex-align:center;
+    -moz-box-align:center;
+    -moz-box-pack:center;
+}
+
+.center_s{
+    display: box;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display: -moz-box;
+    width:100%;
+    box-align:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    -moz-box-align:center;
+}
+.center_h{
+    display: box;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display: -moz-box;
+    width:100%;
+    box-pack:center;
+    -webkit-box-pack:center;
+    -ms-flex-pack:center;
+    -moz-box-pack:center;
+}
+
+
+.border_box{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+
+
+.box_right{
+    display: box;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display: -moz-box;
+    width: 100%;
+    box-pack:end;
+    -webkit-box-pack:end;
+    -ms-flex-pack:end;
+    -moz-box-pack:end;
+}
+
+.box_bottom{
+    display: box;
+    display:-webkit-box;
+    display:-ms-flexbox;
+    display: -moz-box;
+    width: 100%;
+    box-align:end;
+    -webkit-box-align:end;
+    -ms-flex-align:end;
+    -moz-box-align:end;
+}
+
+
+
+.clear{
+    clear: both;
+}
+
+
+
+
+.auto_loading{
+    display: none; min-height: 50px;
+}
+
+
+
+
+
+
+
+.red{
+    color: #bb4f4f;
+}
+.blue{
+    color: #44aec9;
+}
+.yellow{
+    color: #f5a915;
+}
+
+header a:link,header a:visited{
+    color:#fff; text-decoration:none;
+}
+header a:hover{
+    color:#fff; text-decoration:none;
+}
+/*.register_box a:link,.register_box a:visited{*/
+    /*color:#fff; text-decoration:none;*/
+/*}*/
+/*.register_box a:hover{*/
+    /*color:#fff; text-decoration:none;*/
+/*}*/
+.login_bottom a:link,.login_bottom a:visited{
+    color:#000; text-decoration:none;
+}
+.login_bottom a:hover{
+    color:#000; text-decoration:none;
+}
+.footer_select a:link,.footer_select a:visited{
+    color:#333; text-decoration:none;
+}
+.footer_select a:hover{
+    color:#333; text-decoration:none;
+}
+.footer_back a:link,.footer_back a:visited{
+    color:#333; text-decoration:none;
+}
+.footer_back a:hover{
+    color:#333; text-decoration:none;
+}
+
+
+
+
+/*浮动按钮*/
+.float_button{
+    width: 53px; height: 53px;
+    position: fixed; left: 13px; bottom: 13px; z-index: 1000;
+}
+.float_button_img{
+    width: 53px; height: 53px; background: url(../image/float_button.png);
+    background-size: 100% 100%; -webkit-background-size: 100% 100%;
+}
+.float_button_js{
+    width: 46px; height: 0; position: absolute; top: 0; left: 4px;
+    overflow: hidden;
+}
+.float_button_main{
+    width: 46px; height: 247px; background: url(../image/float_bg.png);
+    background-size: 100% 100%; -webkit-background-size: 100% 100%;
+}
+.float_button_main_icon{
+    width: 32px; height: 32px; margin: 0 auto; padding-top: 6px;
+}
+.float_button_main_icon span{
+    display: block; width: 32px; height: 32px;
+}
+.float_home{
+    background: url(../image/f_home.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.float_user{
+    background: url(../image/f_user.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.float_time{
+    background: url(../image/f_time.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.float_shopcar{
+    background: url(../image/f_shop.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.float_game{
+    background: url(../image/f_game.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.float_set{
+    background: url(../image/f_consulting.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+
+
+/*顶部*/
+header{
+    width: 100%; height: 45px; font-size: 18px; font-weight: bold;
+    box-shadow: 0 1px 1px 1px #ccc;
+}
+header .button{
+    width: 45px; height: 45px; margin: 0 2px;
+}
+.header_img{
+    width: 22px; height: 22px;
+}
+header .title{
+    line-height: 45px; text-align: center;
+}
+.header_login_button{
+    width: 44px; height: 22px; background: #5cbfcd; color: #fff;
+    font-size: 16px; text-align: center; line-height: 22px; position: relative;
+    left:-10px;
+}
+
+
+
+.header_icon_qd{
+    background: url(../image/qd.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_yg{
+    background: url(../image/yg.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_back{
+    background: url(../image/back.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_share{
+    background: url(../image/share.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_search{
+    background: url(../image/search.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_more{
+    background: url(../image/more.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_add{
+    background: url(../image/top_add.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_text{
+    background: url(../image/game_rule.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_login{
+    background: url(../image/top_login.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+.header_icon_center{
+    background: url(../image/to_center.png); background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+}
+
+
+
+
+/*底部*/
+footer{
+    margin: 18px 0 26px 0; text-align: center; color: #333; font-size: 12px;
+}
+.footer_select{
+    margin-bottom: 10px;
+}
+.footer_select a{
+    padding: 0 12px; border-right:1px solid #ccc;
+}
+.footer_select a:last-child{
+    border-right:none;
+}
+
+/*返回顶部*/
+.footer_back{
+    width: 100%;  font-size: 12px; color: #333; padding: 0 10px;
+}
+.footer_back a{
+    width: 100%; height: 37px; line-height: 37px; display: block; text-align: center;
+    border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;
+}
+
+
+
+/*输入框前图标*/
+.login_input_user{
+    background: url(../image/input_user.png) no-repeat;
+    background-size: 20px 20px; -webkit-background-size: 20px 20px;
+    background-position: 10px center;
+}
+.login_input_pwd{
+    background: url(../image/input_pwd.png) no-repeat;
+    background-size: 20px 20px; -webkit-background-size: 20px 20px;
+    background-position: 10px center;
+}
+.login_input_token{
+    background: url(../image/input_token.png) no-repeat;
+    background-size: 20px 20px; -webkit-background-size: 20px 20px;
+    background-position: 10px center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

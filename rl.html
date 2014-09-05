@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+
+<script>
+    var rl = function(){
+        this.init();
+    };
+    rl.prototype = {
+        getDayNumber:function(month,year){
+            var ar = [31,28,31,30,31,30,31,31,30,31,30,31];
+            ar[1] = (this.leapYear(year)) ? 29 : 28;
+            return ar[month];
+        },
+        //判断是否是闰年
+        leapYear:function(year) {
+            return (0==year%4 && ((year%100!=0)||(year%400==0)));
+        },
+        getMonthName:function(month){
+            var ar = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+            return ar[month]
+        },
+        getWeekName:function(week){
+            var ar = ["周日","周一","周二","周三","周四","周五","周六"];
+            return ar[week];
+        },
+        init:function(){
+            var now = new Date(),       //当前日期
+                year = now.getFullYear(),   //当前年份
+                month = now.getMonth(), //当前月份0-11
+                monthName = this.getMonthName(month), //当前月份名
+                day = now.getDate(),   //当前日期 1-31
+                dayNumber = this.getDayNumber(month,year),//当月天数
+                firstWeek = new Date(year,month,1).getDay(),//当月第一天星期 0-6   0:周日
+                nextMonth = (month == 11)? 0 : month + 1,//下一个月
+                nextYear = (month == 11)? year + 1 : year,//下一个月的年份
+                preMonth = (month == 0)? 12 : month - 1,//上一个月
+                preYear = (month == 0)? year - 1 : year,//上一个月的年份
+                preDayNumber = this.getDayNumber(preMonth,preYear),//上一个月的天数
+                preFirstShow = preDayNumber - firstWeek + 1,
+                preLoop = firstWeek,
+                nextLoop = 42 - preLoop - dayNumber;
+            console.log(preDayNumber)
+            console.log(firstWeek)
+            this.createPage({
+                preFirstShow:preFirstShow,
+                preLoop:preLoop,
+                nowLoop:dayNumber,
+                nextLoop:nextLoop,
+                year:year,
+                preYear:preYear,
+                nextYear:nextYear,
+                month:month,
+                nextMonth:nextMonth,
+                preMonth:preMonth,
+                monthName:monthName,
+                day:day
+            });
+        },
+        createPage:function(data){
+            var a = 0,
+                html = "日 一 二 3 4 5 6",
+                preFirstShow = data.preFirstShow;
+
+            for(var i= 0,l=data.preLoop;i<l;i++){
+
+                if(a%7 == 0){
+                    html += "<br\/>";
+                }
+                html += preFirstShow + " ";
+
+                preFirstShow++;
+                a++;
+            }
+            for(var j = 0,jl = data.nowLoop;j<jl;j++){
+                if(a%7 == 0){
+                    html += "<br\/>";
+                }
+                var now_data = j+1;
+                html += now_data + " ";
+
+                a++;
+            }
+            for(var k = 0,kl = data.nextLoop; k<kl;k++){
+                if(a%7 == 0){
+                    html += "<br\/>";
+                }
+                var now_data1 = k+1;
+                html += now_data1 + " ";
+                a++;
+            }
+
+            document.body.innerHTML = html;
+        }
+
+
+    };
+
+
+    var b = new rl();
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>

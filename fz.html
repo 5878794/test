@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+</head>
+<script language="javascript" src="js/jquery-1.10.2.js"></script>
+
+<script language="javascript">
+//$(document).ready(function(){
+//	var photo=$("#photo");
+//	photo_src=photo.css("background-image");
+//	photo_position=photo.css("background-position");
+//	photo_width=photo.width();
+//	photo_height=photo.height();
+//
+//	photo.css({"background-image":""});
+//
+//
+//	var innerhtml="<div style='"+
+//				  "width:2px;"+
+//				  "height:"+photo_height+"px;"+
+//				  "background-image:"+photo_src+";"+
+//				  "background-color:#ccc"+";"+
+//				  "float:left"+";"+
+//				  "'></div>"
+//
+//
+//	for(i=0;i<photo_width/2;i++){
+//		photo.append("<div></div>");
+//		photo.find("div:eq("+i+")").css({
+//			width:"2px",
+//			height:photo_height+"px",
+//			//"background-image":photo_src,
+//			"background-color":"#eee",
+//			//"background-position":-i*2+"px 0px",
+//			position:"absolute",
+//			top:"0px",
+//			left:i*2+"px",
+//			"z-index":i
+//		}).attr({wid:i})
+//
+//	}
+//
+//	var center_no=15;
+//		center_no1=14
+//	var runing1=false;
+//	var runing2=false;
+//	var runing3=false;
+//	var left_div=photo.find("div:lt("+center_no+")");
+//	var right_div=photo.find("div:gt("+center_no1+")");
+//	photo.hover(function(){
+//		if(!runing1 && !runing2){
+//			runing1=true;
+//			left_div.each(function(){
+//				$(this).animate({
+//					left:center_no+"px",
+//					height:$(this).height()-(center_no-parseInt($(this).attr("wid")))/2+"px",
+//					top:(center_no-parseInt($(this).attr("wid")))/4+"px"
+//				},400,function(){
+//					$(this).css({"background-color":"#ccc"}).animate({
+//						left:(29-parseInt($(this).attr("wid")))*2+"px",
+//						top:"0px",
+//						height:photo_height+"px"
+//					})
+//
+//				});
+//			})
+//			right_div.each(function(){
+//				$(this).animate({
+//					left:center_no+"px",
+//					height:$(this).height()+(parseInt($(this).attr("wid"))-center_no)/2+"px",
+//					top:(center_no-parseInt($(this).attr("wid")))/4+"px"
+//					//top:"-10px"
+//				},400,function(){
+//					$(this).css({"background-color":"#ccc"}).animate({
+//						left:(29-parseInt($(this).attr("wid")))*2+"px",
+//						top:"0px",
+//						height:photo_height+"px"
+//					})
+//
+//
+//				});
+//			})
+//		}
+//	},function(){
+//		if(runing1 && !runing2){
+//			runing2=true;
+//			left_div.each(function(){
+//				$(this).animate({
+//					left:center_no+"px"	,
+//					height:$(this).height()-(center_no-parseInt($(this).attr("wid")))/2+"px",
+//					top:(center_no-parseInt($(this).attr("wid")))/4+"px"
+//				},400,function(){
+//					$(this).css({"background-color":"#eee"}).animate({
+//						left:(parseInt($(this).attr("wid")))*2+"px",
+//						top:"0px",
+//						height:photo_height+"px"
+//					})
+//					runing1=false;
+//					runing2=false;
+//					runing3=false;
+//				});
+//			})
+//			right_div.each(function(){
+//				$(this).animate({
+//					left:center_no+"px",
+//					height:$(this).height()+(parseInt($(this).attr("wid"))-center_no)/2+"px",
+//					top:(center_no-parseInt($(this).attr("wid")))/4+"px"
+//				},400,function(){
+//					$(this).css({"background-color":"#eee"}).animate({
+//						left:(parseInt($(this).attr("wid")))*2+"px",
+//						top:"0px",
+//						height:photo_height+"px"
+//					})
+//
+//
+//				});
+//			})
+//		}
+//
+//	})
+//
+//
+//})
+//
+//
+
+var a;
+$(document).ready(function(){
+    a = new fz({
+        obj:$("#test"),
+        background1:"game_4.png",
+        background2:"game_back.png",
+        sp_width:6,
+        speed:250
+    })
+
+    setTimeout(function(){
+        a.rotate()
+    },1000)
+
+});
+
+
+
+var fz = function(datas){
+    this.obj = datas.obj;
+    this.width = parseInt(this.obj.width());
+    this.height = parseInt(this.obj.height());
+    this.sp_width = datas.sp_width || 2;
+    this.sp_height = this.height;
+    this.background1 = datas.background1;
+    this.background2 = datas.background2;
+    this.n = this.width/this.sp_width;
+    if(this.n != parseInt(this.n)){
+        this.n += 1;
+    }
+
+
+    this.sp_div = null;
+    this.speed = datas.speed || 500;
+    this.addHeight = datas.addHeight || parseInt(this.height/3);
+
+    this.r = parseInt(this.n/2);
+    this.step = this.addHeight/this.r;
+    this.center = this.width/2;
+
+
+
+    this.divs = null;
+
+
+    this.init();
+
+};
+fz.prototype = {
+    init:function(){
+        this.createDiv();
+        this.insertDiv();
+
+    },
+    createDiv:function(){
+        var _this = this,
+            div = $("<div></div>"),
+            img = $("<img src='"+_this.background1+"'/>");
+        div.css({
+            width:_this.sp_width+"px",
+            height:_this.sp_height+"px",
+            position:"absolute",
+            top:0,
+            left:0,
+            overflow:"hidden"
+        });
+        img.css({
+            width:_this.width+"px",
+            height:"100%",
+            position:"absolute",
+            left:0,
+            top:0,
+            display:"block"
+        });
+        div.append(img);
+        _this.sp_div = div;
+    },
+    insertDiv:function(){
+        var l = this.n,
+            _this = this;
+
+        for(var i= 0;i<l;i++){
+            var div = this.sp_div.clone(),
+                img = div.find("img"),
+                left = i*this.sp_width,
+                h = (_this.r - i)*_this.step;
+
+
+            div.css({left:left+"px","z-index":l-i}).attr({h:h,l:left});
+            div.find("img").css({left:-left+"px"});
+            this.obj.append(div);
+        }
+
+
+        this.divs = this.obj.find("div");
+    },
+    rotate:function(bg){
+        var _this = this;
+        bg = bg || this.background2;
+        this.divs.each(function(){
+            var add_h = parseInt($(this).attr("h")),
+                h = _this.height + add_h,
+                t = - add_h/2;
+
+            $(this).animate({
+                height:h+"px",
+                top: t+"px",
+                left: _this.center + "px",
+                width:"1px"
+            },_this.speed,function(){
+                var get_add_h = parseInt($(this).attr("h")),
+                    temp_h = _this.height - get_add_h,
+                    temp_t = get_add_h/ 2,
+                    left = $(this).attr("l");
+
+                $(this).css({height:temp_h+"px",top:temp_t+"px"}).find("img").attr({src:bg});
+                $(this).animate({
+                    left:left+"px",
+                    top:0,
+                    width:_this.sp_width,
+                    height:_this.sp_height
+                },_this.speed);
+
+
+
+
+            });
+        });
+
+    },
+    back:function(){
+        this.rotate(this.background1);
+    }
+
+
+
+};
+
+
+
+
+</script>
+<body>
+
+<div id="test" style=" position:absolute; left:100px; top:100px; width: 187px; height: 212px;">
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="jq.mobi.js"></script>
+    <script src="jq.extend.js"></script>
+    <script src="bens.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 50px; height: 500px; position: absolute; left: 300px; top: 30px;">
+
+    </div>
+
+
+
+</body>
+</html>
+
+<script>
+    azscroll = {
+        data:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+        main:null,  //主容器
+        mainHeight:null,    //容器高度
+        objHeight:null,     //字母元素高
+        objs:[],            //字母对象数组
+        px2deg:null,        //1px 对应好多度
+        r:null,             //半径
+        maxRoll:7,          //最多影响7个元素
+        hasTouch:'ontouchstart' in window,
+        isStart:false,
+        movedObjs:[],
+        initialise:function(obj){
+            if(typeof(obj) == "string"){
+                obj = document.getElementById(obj);
+            }
+            this.main = obj;
+            this._createElement();
+            this._getObjHeight();
+            this._getPxForDeg();
+            this._createEvent();
+        },
+        _createElement:function(){
+            var obj = document.createElement("div"),
+                data = this.data,
+                style = this.main.style.display;
+            this.main.style.display = "none";
+
+            for(var i= 0,l=data.length;i<l;i++){
+                var this_obj = obj.cloneNode(true);
+                this_obj.innerText = data[i];
+                this.main.appendChild(this_obj);
+                this.objs.push(this_obj);
+            }
+
+            this.main.style.display = style;
+        },
+        _getObjHeight:function(){
+            var obj = this.objs[0],
+                styles = document.defaultView.getComputedStyle(obj,null),
+                height = parseInt(styles.getPropertyValue("height"));
+            this.mainHeight = height*this.objs.length;
+            this.objHeight = height;
+        },
+        _getPxForDeg:function(){
+            this.px2deg = this.objHeight*this.maxRoll/180;
+            this.deg = 180/(this.maxRoll-1);
+        },
+        _createEvent:function(){
+            this.main.addEventListener("mousedown",this,false);
+            this.main.addEventListener("mousemove",this,false);
+            this.main.addEventListener("mouseup",this,false);
+        },
+        handleEvent:function(e){
+            var _this = this;
+            switch (e.type){
+                case "mousedown":
+                    _this._start(e);
+                    break;
+                case "mousemove":
+                    _this._move(e);
+                    break;
+                case "mouseup":
+                    _this._end(e);
+                    break;
+                default :
+                    _this._end(e);
+                    break;
+            }
+        },
+        _start:function(e){
+            this.isStart = true;
+            this._restoreMovedObjs();
+
+            var y = this._getPointY(e),
+                n = parseInt(y/this.objHeight),
+                dpm_y = y%this.objHeight,
+                m_doms = this._getMoveDom(n,dpm_y);
+
+            this._showEffect(m_doms);
+
+
+        },
+        _move:function(e){
+            if(!this.isStart){return;}
+            this._start(e);
+        },
+        _end:function(e){
+            this.isStart = false;
+            this._restoreMovedObjs();
+        },
+        _getPointY:function(e){
+            if(this.hasTouch){
+                e = e.touches[0];
+            }
+
+            //get mail offset y TODO
+            var main_y = 30;
+
+            var this_y = e.pageY - 30;
+
+            return (this_y<0)? 0 : this_y;
+        },
+        _getMoveDom:function(n,y){
+            var temp_y = this.objHeight/ 2,
+                max_number = this.data.length,
+                start_dom = n - 3,
+                end_dom = n + 3,
+                xz_deg,
+                jl = (this.maxRoll -1) / 2 * this.objHeight,
+                deg = Math.PI/180;
+
+
+            xz_deg = -(y - temp_y) * this.px2deg;
+
+            var objs = [],
+                z = -1;
+            for(var i=start_dom,l=end_dom + 1;i<l;i++){
+                z++;
+                var this_obj = this.objs[i],
+                    this_deg, xz_x,xz_y;
+
+                if(this_obj){
+                    this_deg = z*this.deg + xz_deg;
+                    this_deg = (this_deg < 0)? 0 : this_deg;
+                    this_deg = (this_deg > 180)? 180 : this_deg;
+
+                    xz_x = - Math.sin(this_deg*deg)*jl;
+                    xz_y = Math.abs(Math.cos(this_deg*deg)*jl);
+                    var old_y = (this.objHeight * Math.abs(z-3))
+
+                    xz_y = (this_deg <= 90)? old_y - xz_y : xz_y - old_y;
+
+                }
+
+
+                objs.push({
+                    obj:this_obj,
+                    deg:this_deg,
+                    x:xz_x,
+                    y:xz_y
+                });
+            }
+
+
+            return objs;
+        },
+        _showEffect:function(objs){
+            for(var i= 0,l=objs.length;i<l;i++){
+                var obj = objs[i].obj,
+                    x = objs[i].x,
+                    y = objs[i].y;
+
+                if(obj){
+                    obj.style.cssText = "-webkit-transform:translate("+x+"px,"+y+"px)";
+                }
+
+            }
+            this.movedObjs = objs;
+        },
+        _restoreMovedObjs:function(){
+            var data = this.movedObjs;
+            for(var i= 0,l=data.length;i<l;i++){
+                var obj = data[i].obj,
+                        x = data[i].x,
+                        y = data[i].y;
+
+                if(obj){
+                    obj.style.cssText = "-webkit-transform:translate(0,0)";
+                }
+            }
+
+
+        }
+
+    };
+
+    azscroll.initialise("main");
+
+</script>

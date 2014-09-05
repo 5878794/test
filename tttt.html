@@ -1,0 +1,41 @@
+<xml>
+    <!--Template：模板定义-->
+    <Template Name="模版一(美丽西部)" Code="BeautifulWest" View="~/Template/BeautifulWest/Views/Index.cshtml" TemplateImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg" Description="这是模板一，适用于美丽西部类似专题。">
+        <!--Modules：模板中的模块集合，总共有3个模块类型（ModuleType），7个Module（资讯：介绍、风土人情、本地资讯、特产；抢购；轮换；）自由组合，不一定全部包含-->
+        <Modules>
+            <!--ModuleType 0：资讯；1、抢购；2：轮换；3：产品列表；4：商家列表；5：商家店铺；6：商家介绍；7：高大上-->
+            <!--ArticleType 如果是ModuleType=0，此处记录文章的ArticleType，必须的节点-->
+            <Module Name="专题抢购" Code="CountDown" ModuleType="1" Required="true" Visible="true" MaxContentCount="8" ContentImageWidth="220px" ContentImageHeight="165px" ContentDescriptionMaxLength="0" ContentTitleMaxLength="0" PartialView="~/Template/BeautifulWest/Views/_PartialCountDown.cshtml" Description="美丽西部模版中的抢购模块" ModuleImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg">
+                <Properties>
+                    <Propertity Name="模块自定义标题" Column="ModuleTitle" Required="true" Visible="true" DataType="string" Control="TextBox" />
+                    <Propertity Name="模块自定义描述" Column="ModuleDescription" Required="false" Visible="true" DataType="string" Control="TextBox" />
+                </Properties>
+            </Module>
+            <Module Name="专题介绍" Code="Description" ModuleType="0" ArticleType="1" Required="true" Visible="true" MaxContentCount="1" ContentImageWidth="420px" ContentImageHeight="293px" ContentDescriptionMaxLength="0" ContentTitleMaxLength="0" PartialView="~/Template/BeautifulWest/Views/_PartialArticleIntroduce.cshtml" Description="美丽西部模版中的介绍模块，关联资讯的专题介绍类别。" ModuleImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg">
+                <Properties>
+                </Properties>
+            </Module>
+            <Module Name="风土人情" Code="Customs" ModuleType="0" ArticleType="2" Required="true" Visible="true" MaxContentCount="4" ContentImageWidth="150px" ContentImageHeight="150px" ContentDescriptionMaxLength="0" ContentTitleMaxLength="0" PartialView="~/Template/BeautifulWest/Views/_PartialArticleCustoms.cshtml" Description="美丽西部模版中的风土人情模块，关联资讯的专题风土人情类别。" ModuleImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg">
+                <Properties>
+                    <Propertity Name="模块自定义标题" Column="ModuleTitle" Required="true" Visible="true" DataType="string" Control="TextBox" />
+                </Properties>
+            </Module>
+            <Module Name="本地资讯" Code="Local" ModuleType="0" ArticleType="3" Required="true" Visible="true" MaxContentCount="10"  ContentImageWidth="160px" ContentImageHeight="120" ContentDescriptionMaxLength="0" ContentTitleMaxLength="0" PartialView="~/Template/BeautifulWest/Views/_PartialArticleLocal.cshtml" Description="美丽西部模版中的本地资讯模块，关联资讯的本地资讯类别。" ModuleImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg">
+                <Properties>
+                    <Propertity Name="模块自定义标题" Column="ModuleTitle" Required="true" Visible="true" DataType="string" Control="TextBox" />
+                </Properties>
+            </Module>
+            <Module Name="特产" Code="Specialty" ModuleType="0" ArticleType="4" Required="true" Visible="true" MaxContentCount="9"  ContentImageWidth="223px" ContentImageHeight="167px" ContentDescriptionMaxLength="0" ContentTitleMaxLength="0" PartialView="~/Template/BeautifulWest/Views/_PartialArticleSpecialty.cshtml" Description="美丽西部模版中的特产模块，关联资讯的特产类别。" ModuleImage="~/Template/BeautifulWest/tipimg/BeautifulWest.jpg">
+                <Properties>
+                    <Propertity Name="模块自定义标题" Column="ModuleTitle" Required="true" Visible="true" DataType="string" Control="TextBox" />
+                </Properties>
+            </Module>
+        </Modules>
+        <Properties>
+            <Propertity Name="专题背景色" Column="ActivityBgColor" Required="true" Visible="true" DataType="string" Control="TextBox" />
+            <Propertity Name="专题背景图" Column="ActivityBgImgID" Required="true" Visible="true" DataType="int" Control="UploadControl"  Width="1660px" Height="771px"/>
+            <Propertity Name="专题关联的省市区域" Column="ActivityArea" Required="true" Visible="true" DataType="int" Control="AddSelect" />
+            <Propertity Name="区域的经纬度坐标" Column="ActivityMapPosition" Required="true" Visible="true" DataType="string" Control="TextBox" />
+        </Properties>
+    </Template>
+</xml>

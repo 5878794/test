@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jq.mobi.js"></script>
+    <!--<script src="js/jquery-1.10.2.js"></script>-->
+</head>
+<body>
+
+<form id="test123">
+    <input id="test" name="test" type="file" />
+</form>
+
+
+</body>
+</html>
+<script>
+    var uploadFile = {
+        inputId:null,           //输入框id   str
+        types:null,             //支持的文件类型   "jpg,jpeg,png"
+        maxSize:null,           //number  上传文件最大字节
+        src:null,               //上传地址  新浏览器用
+        src1:null,              //        老浏览器用
+        formId:null,            //表单id
+
+        error:null,             //fn     出错显示
+        showImg:null,           //fn     显示图片
+        progress:null,          //fn     上传进度
+        oneSuccess:null,        //fn     上传成功1个
+        complete:null,          //fn     上传全部成功
+        uploadError:null,       //fn     上传时错误
+
+        cache:[],               //对象缓存
+        errors:[],              //错误缓存
+        init:function(datas){
+            this.inputId = datas.id;
+            this.types = datas.types;
+            this.error = datas.error;
+            this.maxSize = datas.maxSize;
+            this.showImg = datas.showImg;
+            this.src = datas.src;
+            this.src1 = datas.src1;
+            this.progress = datas.progress;
+            this.oneSuccess = datas.oneSuccess;
+            this.complete = datas.complete;
+            this.uploadError = datas.uploadError;
+            this.formId = datas.formId;
+
+            this.addEvent();
+        },
+        addEvent:function(){
+            var _this = this;
+            $("#"+this.inputId).change(function(e){
+                _this.inputChange(this,e);
+            });
+        },
+        getId:(function(){
+            var a = 0;
+            return function(){
+                a++;
+                return a;
+            }
+        })(),
+        checkSupport:function(){
+            var form = false;
+            try{
+                new FormData();
+                new FileReader();
+                new XMLHttpRequest();
+                form = true;
+            }catch(e){
+                form = false;
+            }
+            return form;
+        },
+        checkFileType:function(){
+            var value = $("#"+this.inputId).val(),
+                type = value.substr(value.lastIndexOf(".")+1).toLocaleLowerCase(),
+                types = ","+this.types+",";
+
+            return (types.indexOf(","+type+",") > -1);
+        },
+        inputChange:function(obj,e){
+            if($("#"+this.inputId).val() == "" ){
+                return;
+            }
+
+            var pass = this.checkFileType(),
+                support = this.checkSupport();
+
+            if(!pass){
+                this.error("文件格式不对");
+                return;
+            }
+
+            if(support){
+                //支持ajax上传
+                this.readFile(obj,e);
+            }else{
+                //老浏览器
+                this.createIframe();
+            }
+        },
+        readFile:function(obj,e){
+            var file = obj.files[0],
+                checkSize = (file.size <= this.maxSize),
+                _this = this;
+
+            if(!checkSize){
+                this.error("文件大小超出限制");
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onloadend=function(){
+                _this.showFile(this,file);
+            };
+            reader.readAsDataURL(file);
+        },
+        showFile:function(file,obj){
+            var src = file.result;
+
+            var id = this.getId();
+            this.cache.push({file:obj,id:id});
+
+            this.showImg(src,id);
+        },
+        upload:function(){
+            var _this = this,
+                n = 0;
+
+            if(this.cache.length == 0 ){
+                _this.error("您还没有选择图片");
+                return;
+            }
+
+            var upload_file = function(file,id,number){
+                var formData = new FormData();
+                formData.append('files', file);
+
+
+                var xhr = new XMLHttpRequest(),
+                    t = new Date().getTime();
+                xhr.open('POST', _this.src+"?t="+t, true);
+
+                xhr.onload = function(e) {
+                    var response = JSON.parse(e.currentTarget.responseText),
+                        id = _this.cache[n].id,
+                        file_name = file.name;
+
+                    var isSuccess = _this.oneSuccess(response);
+                    if(isSuccess){
+                        _this.cache[n].success = true;
+                    }else{
+                        _this.errors.push({
+                            file_name:file_name,
+                            id:id,
+                            n:n,
+                            response:response
+                        })
+                    }
+                    n++;
+                    go();
+                };
+
+
+                xhr.upload.onprogress = function(e){
+                    if(e.lengthComputable){
+                        var total = e.total,
+                            loaded = e.loaded,
+                            id = _this.cache[n].id;
+                        _this.progress(total,loaded,id);
+                    }
+                };
+
+
+                xhr.onerror = function(e){
+                    var id = _this.cache[n].id,
+                        file_name = file.name;
+
+                    _this.errors.push({
+                        file_name:file_name,
+                        id:id,
+                        n:n,
+                        response:{}
+                    })
+                };
+
+
+                xhr.send(formData);
+            };
+
+            var go = function(){
+                if(_this.cache.length == n){
+                    _this.success();
+                }else{
+                    var temp = _this.cache[n],
+                        file = temp.file,
+                        id = temp.id,
+                        isSuccess = temp.success;
+
+                    if(isSuccess){
+                        go();
+                    }else{
+                        upload_file(file,id,n);
+                    }
+                }
+            };
+
+            go();
+        },
+        createIframe:function(){
+            var iframe = $("<iframe name='__bens_iframe_name__' id='__bens_iframe__' width='0' height='0' frameborder='0' ></iframe>"),
+                form = $("#"+this.formId),
+                t = new Date().getTime();
+
+            form.attr({
+                target:"__bens_iframe_name__",
+                action:this.src1+"?t="+t,
+                enctype:"multipart/form-data",
+                method:"post"
+            });
+            $("body").append(iframe);
+
+//            $("#"+this.inputId).wrap(form);
+//            $(form).append("<input type='text' value='123' name='test1'>");
+            form.submit();
+
+
+        },
+        success:function(){
+            if(this.errors.length == 0){
+                //全部成功
+                this.complete();
+            }else{
+                this.uploadError(this.errors);
+                this.errors = [];
+            }
+        },
+        delOne:function(id){
+            var new_array = [];
+            for(var i= 0,l=this.cache.length;i<l;i++){
+                if(this.cache[i].id != id){
+                    new_array.push(this.cache[i]);
+                }
+            }
+            this.cache = new_array;
+        },
+        oldSuccess:function(rs){
+            rs = rs.Status
+            alert(rs);
+        }
+
+    };
+
+    uploadFile.init({
+        id:"test",
+        types:"jpg,jpeg,png",
+        maxSize:104857600,
+        formId:"test123",
+        src:"http://172.18.252.118:8001/Product/TestUploadReviewPhoto",
+        src1:"http://172.18.252.118:8001/Product/TestUploadReviewPhoto2",
+        showImg:function(src,id){
+            $("body").append("<img src='"+src+"' data-d = "+id+" />")
+        },
+        error:function(msg){
+            alert(msg)
+        },
+        progress:function(total,loaded,id){
+            console.log(total+" "+loaded+" "+id)
+        },
+        oneSuccess:function(rs){
+            return (rs.Status == 1);
+        },
+        uploadError:function(errors){
+            //errors   array
+
+        },
+        complete:function(){
+            alert("all ok")
+        }
+    });
+
+
+
+</script>

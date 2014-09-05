@@ -1,0 +1,20 @@
+CACHE MANIFEST
+# v01111333333
+
+# Explicitly cached 'master entries'.
+
+cache.html
+#20130318123409694_easyicon_net_16.png
+oceans-clip.jpg
+box.html
+
+
+# Resources that require the user to be online.
+NETWORK:
+*
+
+# static.html will be served if main.py is inaccessible
+# offline.jpg will be served in place of all images in images/large/
+# offline.html will be served in place of all other .html files
+FALLBACK:
+box.html
