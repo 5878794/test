@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script>
+        $(document).ready(function(){
+            var dian = $("#dian");
+            var points = [0,400,900,1300,1600,2000,2400,2800];
+
+            $(window).scroll(function(e){
+                var scrollTop = e.currentTarget.scrollY,
+                    pointTop = scrollTop + window.innerHeight/ 2,
+                    n = 0;
+
+                for(var i= 0,l=points.length;i<l;i++){
+                    if(pointTop>points[i]){
+                        n = i;
+                    }
+                }
+
+                if(n%2 == 1){
+                    dian.css({background:"#000"})
+                }else{
+                    dian.css({background:"#fff"})
+                }
+
+            });
+
+
+        })
+    </script>
+</head>
+<body>
+
+<div style="width: 100%; height: 400px; background: #000;"></div>
+<div style="width: 100%; height: 500px; background: #fff;"></div>
+<div style="width: 100%; height: 400px; background: #000;"></div>
+<div style="width: 100%; height: 300px; background: #fff;"></div>
+<div style="width: 100%; height: 400px; background: #000;"></div>
+<div style="width: 100%; height: 400px; background: #fff;"></div>
+<div style="width: 100%; height: 400px; background: #000;"></div>
+
+<div id="dian" style="width: 20px; height: 20px; position: fixed; right:10px; top: 50%; margin-top: -10px; background: #fff;"></div>
+
+</body>
+</html>
